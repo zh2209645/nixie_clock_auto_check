@@ -5,7 +5,7 @@ import clock_supp
 import time
 
 time_sleep = 3600
-auto_close_connection = False
+auto_close_connection = True
 cl = clock_supp.Nixie_Clock()
 
 def check_time(Nixie_Clock_Object):
