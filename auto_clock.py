@@ -4,7 +4,7 @@ import sys
 import clock_supp
 import time
 
-time_sleep = '3600'
+time_sleep = 3600
 auto_close_connection = False
 cl = clock_supp.Nixie_Clock()
 
