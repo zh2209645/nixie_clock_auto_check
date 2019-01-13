@@ -74,7 +74,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 1:
         time_sleep = int(sys.argv[1])
     
-    countdown = 0
+    countdown = time_sleep
 
     # Main loop 
     while True:
