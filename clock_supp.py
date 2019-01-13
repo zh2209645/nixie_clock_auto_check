@@ -93,6 +93,7 @@ class Nixie_Clock:
             if self.ser.isOpen():
                 self.ser.close()
                 print("Connection closed")
+                time.sleep(3)
             else:
                 print("Connection already closed")
         
@@ -105,6 +106,7 @@ class Nixie_Clock:
             else:
                 self.ser.open()
                 print("Connection opened")
+                time.sleep(3)
                 self.recv_data()
     
     def is_open(self):
