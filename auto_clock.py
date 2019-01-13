@@ -20,6 +20,7 @@ cl = clock_supp.Nixie_Clock()
 def check_time(Nixie_Clock_Object):
     if not Nixie_Clock_Object.is_open():
         Nixie_Clock_Object.open()
+        time.sleep(5)
     t = time.time()
     print('---------------------')
     print(time.asctime(time.localtime(t)) + ' check clock time...')
