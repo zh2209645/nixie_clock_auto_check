@@ -5,16 +5,23 @@ import time
 
 class Nixie_Clock:
 
+    __debug_mode = True
+
     baud_rate = 115200
     port = '/dev/ttyACM0'
     light_color = ['FF8C00', 'FF8C00', 'FF8C00', 'FF8C00', 'FF8C00', 'FF8C00']
+
+    close_light = ['000000', '000000', '000000', '000000', '000000', '000000']
     
     ser = None
     timeout = 0.5
 
     def __init__(self):
         self.read_config()
-        self.ser = serial.Serial(port=self.port, baudrate=self.baud_rate, timeout=self.timeout)
+        if self.__debug_mode:
+            print('Port={}, baudrate={} open finished.'.format(self.port, self.baud_rate))
+        else:
+            self.ser = serial.Serial(port=self.port, baudrate=self.baud_rate, timeout=self.timeout)
     
     def change_baud_rate(self, baud_rate=int()):
         self.baud_rate = baud_rate
@@ -30,12 +37,19 @@ class Nixie_Clock:
     
     def save_time(self, timestamp=time.time()):
         time_data = self.__time_convert(timestamp)
-        write_data = '*'
+        write_data = self.__encode_data(self.light_color, time_data)
+        if self.__debug_mode:
+            print('write data {}'.format(write_data))
+        else:
+            self.write_to_clock(write_data.encode())
 
-        for i in range(6):
-            write_data = write_data + time_data[i] + self.light_color[i]
-        
-        self.write_to_clock(write_data.encode())
+    def close_clock_light(self, timestamp=time.time()):
+        time_data = self.__time_convert(timestamp)
+        write_data = self.__encode_data(self.close_light, time_data)
+        if self.__debug_mode:
+            print('write data {}'.format(write_data))
+        else:
+            self.write_to_clock(write_data.encode())
 
     def __time_convert(self, timestamp):
         struct_time = time.localtime(timestamp)
@@ -65,27 +79,47 @@ class Nixie_Clock:
         return time_list
 
     def connection(self):
-        if self.ser.isOpen():
+        if self.__debug_mode:
             print("Connected")
         else:
-            print('Disconnected')
+            if self.ser.isOpen():
+                print("Connected")
+            else:
+                print('Disconnected')
 
     def close(self):
-        if self.ser.isOpen():
-            self.ser.close()
+        if self.__debug_mode:
             print("Connection closed")
         else:
-            print("Connection already closed")
+            if self.ser.isOpen():
+                self.ser.close()
+                print("Connection closed")
+            else:
+                print("Connection already closed")
         
     def open(self):
-        if self.ser.isOpen():
-            print("Already connected")
-        else:
-            self.ser.open()
+        if self.__debug_mode:
             print("Connection opened")
+        else:
+            if self.ser.isOpen():
+                print("Already connected")
+            else:
+                self.ser.open()
+                print("Connection opened")
     
     def is_open(self):
-        return self.ser.isOpen()
+        if self.__debug_mode:
+            return True
+        else:
+            return self.ser.isOpen()
+
+    def __encode_data(self, color_setting, time_data):
+        write_data = '*'
+
+        for i in range(6):
+            write_data = write_data + time_data[i] + color_setting[i]
+        
+        return write_data
 
     def write_to_clock(self, bytes_data):
         self.ser.write(bytes_data)
