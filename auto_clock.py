@@ -50,10 +50,6 @@ def in_night(timestamp=time.time()):
     
     tm_hour = struct_time.tm_hour
     tm_min = struct_time.tm_min
-    tm_sec = struct_time.tm_sec
-    print(tm_hour, tm_min, tm_sec)
-    print(night_mode_start)
-    print(night_mode_end)
 
     if night_mode_start['hour'] == tm_hour:
         if night_mode_start['min'] <= tm_min < night_mode_end['min']:
@@ -69,7 +65,7 @@ def in_night(timestamp=time.time()):
 if __name__ == "__main__":
     if cl.is_open():
         cl.close()
-        time.sleep(5)
+        time.sleep(10)
     
     if len(sys.argv) != 1:
         time_sleep = int(sys.argv[1])
@@ -82,7 +78,6 @@ if __name__ == "__main__":
             if night_mode:
                 t = time.time()
                 if cl.is_night_mode():
-                    print('clock in night mode')
                     if not in_night(t):
                         check_time(cl)
                         cl.night_mode = False
@@ -90,7 +85,6 @@ if __name__ == "__main__":
                     else:
                         time.sleep(countdown_step)
                 else:
-                    print('clock not in night mode')
                     if in_night(t):
                         turn_on_night_mode(cl)
                         cl.night_mode = True
