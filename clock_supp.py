@@ -7,6 +7,8 @@ class Nixie_Clock:
 
     __debug_mode = True
 
+    night_mode = False
+
     baud_rate = 115200
     port = '/dev/ttyACM0'
     light_color = ['FF8C00', 'FF8C00', 'FF8C00', 'FF8C00', 'FF8C00', 'FF8C00']
@@ -38,18 +40,14 @@ class Nixie_Clock:
     def save_time(self, timestamp=time.time()):
         time_data = self.__time_convert(timestamp)
         write_data = self.__encode_data(self.light_color, time_data)
-        if self.__debug_mode:
-            print('write data {}'.format(write_data))
-        else:
-            self.write_to_clock(write_data.encode())
+        
+        self.write_to_clock(write_data.encode())
 
     def close_clock_light(self, timestamp=time.time()):
         time_data = self.__time_convert(timestamp)
         write_data = self.__encode_data(self.close_light, time_data)
-        if self.__debug_mode:
-            print('write data {}'.format(write_data))
-        else:
-            self.write_to_clock(write_data.encode())
+        print('close clock light')
+        self.write_to_clock(write_data.encode())
 
     def __time_convert(self, timestamp):
         struct_time = time.localtime(timestamp)
@@ -113,6 +111,9 @@ class Nixie_Clock:
         else:
             return self.ser.isOpen()
 
+    def is_night_mode(self):
+        return self.night_mode
+
     def __encode_data(self, color_setting, time_data):
         write_data = '*'
 
@@ -122,9 +123,12 @@ class Nixie_Clock:
         return write_data
 
     def write_to_clock(self, bytes_data):
-        self.ser.write(bytes_data)
-        for line in self.ser.readlines():
-            print(line.decode())
+        if self.__debug_mode:
+            print('write data {}'.format(bytes_data.decode()))
+        else:
+            self.ser.write(bytes_data)
+            for line in self.ser.readlines():
+                print(line.decode())
 
     def recv_data(self):
         for line in self.ser.readlines():
