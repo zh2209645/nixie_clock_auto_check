@@ -5,7 +5,7 @@ import time
 
 class Nixie_Clock:
 
-    __debug_mode = True
+    __debug_mode = False
 
     night_mode = False
 
