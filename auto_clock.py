@@ -20,7 +20,7 @@ cl = clock_supp.Nixie_Clock()
 def check_time(Nixie_Clock_Object):
     if not Nixie_Clock_Object.is_open():
         Nixie_Clock_Object.open()
-        time.sleep(10)
+        time.sleep(5)
     t = time.time()
     print('---------------------')
     print(time.asctime(time.localtime(t)) + ' check clock time...')
@@ -29,11 +29,12 @@ def check_time(Nixie_Clock_Object):
         Nixie_Clock_Object.close()
     print('Finish')
     print('---------------------')
+    time.sleep(5)
 
 def turn_on_night_mode(Nixie_Clock_Object):
     if not Nixie_Clock_Object.is_open():
         Nixie_Clock_Object.open()
-        time.sleep(10)
+        time.sleep(5)
     t = time.time()
     print('---------------------')
     print(time.asctime(time.localtime(t)) + ' close clock light...')
@@ -42,6 +43,7 @@ def turn_on_night_mode(Nixie_Clock_Object):
         Nixie_Clock_Object.close()
     print('Finish')
     print('---------------------')
+    time.sleep(5)
 
 def in_night(timestamp=time.time()):
     struct_time = time.localtime(timestamp)
@@ -67,7 +69,7 @@ def in_night(timestamp=time.time()):
 if __name__ == "__main__":
     if cl.is_open():
         cl.close()
-        time.sleep(10)
+        time.sleep(5)
     
     if len(sys.argv) != 1:
         time_sleep = int(sys.argv[1])
