@@ -24,6 +24,7 @@ class Nixie_Clock:
             print('Port={}, baudrate={} open finished.'.format(self.port, self.baud_rate))
         else:
             self.ser = serial.Serial(port=self.port, baudrate=self.baud_rate, timeout=self.timeout)
+            self.recv_data()
     
     def change_baud_rate(self, baud_rate=int()):
         self.baud_rate = baud_rate
@@ -104,6 +105,7 @@ class Nixie_Clock:
             else:
                 self.ser.open()
                 print("Connection opened")
+                self.recv_data()
     
     def is_open(self):
         if self.__debug_mode:
@@ -127,8 +129,7 @@ class Nixie_Clock:
             print('write data {}'.format(bytes_data.decode()))
         else:
             self.ser.write(bytes_data)
-            for line in self.ser.readlines():
-                print(line.decode())
+            self.recv_data()
 
     def recv_data(self):
         for line in self.ser.readlines():
